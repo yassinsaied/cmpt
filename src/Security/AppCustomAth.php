@@ -3,6 +3,7 @@
 namespace App\Security;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -48,14 +49,19 @@ class AppCustomAth extends AbstractAuthenticator
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
         return new RedirectResponse(
-
             $this->router->generate('cmpt_dashbord')
         );
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
-    {
-        dd('fail');
+    {   
+
+        $request->getSession()->set(Security::AUTHENTICATION_ERROR, $exception);
+
+        return new RedirectResponse(
+            $this->router->generate('cmpt_login')
+        );
+        // dd('failure', $exception);
     }
 
     //    public function start(Request $request, AuthenticationException $authException = null): Response

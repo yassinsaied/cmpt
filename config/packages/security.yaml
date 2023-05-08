@@ -1,5 +1,6 @@
 security:
   enable_authenticator_manager: true
+  hide_user_not_found: true
   # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
   password_hashers:
     Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: "auto"
@@ -24,7 +25,7 @@ security:
         check_path: cmpt_login
 
       logout:
-        path: app_logout
+        path: cmpt_logout
         # where to redirect after logout
         # target: app_any_route
 

@@ -24,4 +24,12 @@ class SecurityController extends AbstractController
             'error'         => $error,
         ]);
     }
+
+
+    #[Route('/logout', name: 'cmpt_logout')]
+    public function logout()
+    {
+        throw new \Exception('logout() should never be reached');
+    }
+
 }
