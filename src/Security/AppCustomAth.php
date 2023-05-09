@@ -14,6 +14,8 @@ use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\CsrfTokenBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
+use Symfony\Component\Security\Http\Authenticator\Passport\Badge\RememberMeBadge;
+use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntrypointInterface;
 
 class AppCustomAth extends AbstractAuthenticator
 {
@@ -42,7 +44,10 @@ class AppCustomAth extends AbstractAuthenticator
         return new Passport(
             new UserBadge($email),
             new PasswordCredentials($password),
-            [new CsrfTokenBadge('authenticate', $csrfToken)]
+            [
+                 new CsrfTokenBadge('authenticate', $csrfToken) ,
+                 new RememberMeBadge()
+            ]
         );
     }
 
@@ -73,5 +78,10 @@ class AppCustomAth extends AbstractAuthenticator
     //         *
     //         * For more details, see https://symfony.com/doc/current/security/experimental_authenticators.html#configuring-the-authentication-entry-point
     //         */
+
+
+    //         return new RedirectResponse(
+    //             $this->router->generate('cmpt_login')
+    //         );
     //    }
 }
