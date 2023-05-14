@@ -1,20 +1,38 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}Hello HomeController!
+{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+	<style>
+		.example-wrapper {
+			margin: 1em auto;
+			max-width: 800px;
+			width: 95%;
+			font: 18px / 1.5 sans-serif;
+		}
+		.example-wrapper code {
+			background: #F5F5F5;
+			padding: 2px 6px;
+		}
+	</style>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/Users/yassin saied/Desktop/cmptApp/src/Controller/HomeController.php'|file_link(0) }}">src/Controller/HomeController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/Users/yassin saied/Desktop/cmptApp/templates/home/index.html.twig'|file_link(0) }}">templates/home/index.html.twig</a></code></li>
-    </ul>
-</div>
+	<div class="example-wrapper">
+		<h1>Hello
+			{{ controller_name }}! ✅</h1>
+		{% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+			<div class="dropdown">
+				<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="user-dropdown">
+					{% if is_granted('ROLE_PREVIOUS_ADMIN') %}
+						<li>
+							<a class="dropdown-item" href="{{ path('cmpt_dashboard', { '_switch_user': '_exit' }) }}">Exit Impersonation</a>
+						</li>
+					{% endif %}
+				</ul>
+			</div>
+		{% else %}
+			<a class="nav-link text-black-50" href="{{ path('cmpt_dashboard') }}">Log In</a>
+			<a href="#" class="btn btn-dark">Sign up</a>
+		{% endif %}
+	</div>
 {% endblock %}

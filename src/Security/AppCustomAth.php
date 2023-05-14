@@ -49,12 +49,12 @@ class AppCustomAth extends AbstractAuthenticator
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
         return new RedirectResponse(
-            $this->router->generate('cmpt_dashbord')
+            $this->router->generate('cmpt_dashboard')
         );
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
-    {   
+    {
 
         $request->getSession()->set(Security::AUTHENTICATION_ERROR, $exception);
 
