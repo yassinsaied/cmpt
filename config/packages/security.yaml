@@ -30,9 +30,10 @@ security:
       form_login:
         login_path: cmpt_login
         check_path: cmpt_login
-
       logout:
         path: cmpt_logout
+      remember_me:
+        secret: '%kernel.secret%'  
         # where to redirect after logout
         # target: app_any_route
 
