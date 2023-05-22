@@ -33,7 +33,7 @@ security:
       logout:
         path: cmpt_logout
       remember_me:
-        secret: '%kernel.secret%'  
+        secret: "%kernel.secret%"
         # where to redirect after logout
         # target: app_any_route
 
@@ -47,7 +47,7 @@ security:
   # Note: Only the *first* access control that matches will be used
   access_control:
     - { path: ^/login, roles: PUBLIC_ACCESS }
-    - { path: ^/dashboard, roles: ROLE_ADMIN }
+    - { path: ^/dashboard, roles: ROLE_USER }
 
 when@test:
   security:
