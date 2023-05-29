@@ -17,14 +17,14 @@ class AccountBalance
 
 
     # Many accountType have One account.
-    #[ORM\ManyToOne( targetEntity:self::class , inversedBy:'accountType' )]
-    #[ORM\JoinColumn(name:'parent_id',  referencedColumnName :'id' , nullable:true)]
-    private  self $account;
+    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'accountType')]
+    #[ORM\JoinColumn(name: 'parent_id',  referencedColumnName: 'id', nullable: true)]
+    private self $account;
 
-    
+
     #One ProductCategory has Many ProductCategories.
-    #[ORM\OneToMany(targetEntity:self::class , mappedBy:'account' )]
-    private  Collection $accountType ;
+    #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'account')]
+    private  Collection $accountType;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $name = null;
@@ -66,7 +66,7 @@ class AccountBalance
         return $this->accountType;
     }
 
-    public function AccountType(self $accountType): self
+    public function addAccountType(self $accountType): self
     {
         if (!$this->accountType->contains($accountType)) {
             $this->accountType[] = $accountType;
@@ -76,7 +76,7 @@ class AccountBalance
         return $this;
     }
 
-    public function removeSousFamille(self $accountType): self
+    public function removeAccountType(self $accountType): self
     {
         if ($this->accountType->contains($accountType)) {
             $this->accountType->removeElement($accountType);

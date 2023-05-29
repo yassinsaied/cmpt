@@ -12,8 +12,14 @@ class AppFixtures extends Fixture
 {
 
     const ACCOUNT = [
-        "Actifs" => ["Actifs non courants ", "Actifs courants"],
-        "Passive" => ["Capitaux propres", "Passive courants"]
+        "Actifs" => [
+            201 =>  "Actifs non courants",
+            202 => "Actifs courants"
+        ],
+        "Passive" => [
+            203 =>  "Capitaux propres",
+            204 =>  "Passive courants"
+        ]
 
     ];
 
@@ -26,17 +32,29 @@ class AppFixtures extends Fixture
     //     $manager->flush();
     // }
 
-    
+
     function load(ObjectManager $manager): void
     {
 
-        $accountBalance = new AccountBalance();
+
 
         foreach (self::ACCOUNT as $key => $value) {
-            $accountBalance->setAccount($key);
-            $accountBalance->addAccountType($value);
+            $accountBalance = new AccountBalance();
+            $accountBalance->setName($key);
+            $accountBalance->setCode(100);
+            $accountBalance->setStatus(0);
+            $manager->persist($accountBalance);
+            $this->addReference($key, $accountBalance);
+            foreach ($value as $subKey => $subValue) {
+                $subAccountBalance = new AccountBalance();
+                $subAccountBalance->setName($subValue);
+                $subAccountBalance->setCode($subKey);
+                $subAccountBalance->setStatus(1);
+                $subAccountBalance->setAccount($this->getReference($key));
+                $manager->persist($subAccountBalance);
+            }
         }
-        $manager->persist($accountBalance);
+
         $manager->flush();
     }
 }
