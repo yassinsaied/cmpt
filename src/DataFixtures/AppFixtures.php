@@ -17,15 +17,6 @@ class AppFixtures extends Fixture
 
     ];
 
-
-
-
-
-
-
-
-
-
     // public function load(ObjectManager $manager): void
     // {
     //     // $product = new Product();
@@ -35,6 +26,7 @@ class AppFixtures extends Fixture
     //     $manager->flush();
     // }
 
+    
     function load(ObjectManager $manager): void
     {
 
@@ -44,7 +36,6 @@ class AppFixtures extends Fixture
             $accountBalance->setAccount($key);
             $accountBalance->addAccountType($value);
         }
-
         $manager->persist($accountBalance);
         $manager->flush();
     }
