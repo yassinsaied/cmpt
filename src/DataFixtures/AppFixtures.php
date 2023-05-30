@@ -36,8 +36,6 @@ class AppFixtures extends Fixture
     function load(ObjectManager $manager): void
     {
 
-
-
         foreach (self::ACCOUNT as $key => $value) {
             $accountBalance = new AccountBalance();
             $accountBalance->setName($key);
