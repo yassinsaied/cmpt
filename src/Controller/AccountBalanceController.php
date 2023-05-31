@@ -20,7 +20,7 @@ class AccountBalanceController extends AbstractController
         $form->handleRequest($request);
 
         return $this->render('account_balance/create.html.twig', [
-            'controller_name' => 'AccountBalanceController',
+             "formCreateAccount" =>  $form->createView() 
         ]);
     }
 }

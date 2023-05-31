@@ -5,7 +5,8 @@ namespace App\Form;
 use App\Entity\AccountBalance;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
-use App\Repository\AccountBalanceRepository;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -24,17 +25,38 @@ class AccountBalanceType extends AbstractType
 
             ->add('code', TextType::class, [
                 'required' => true,
-                'label' => 'Account Name',
+                'label' => 'Code',
             ])
 
             ->add('account', EntityType::class, [
                 'class' => AccountBalance::class,
                 'query_builder' => function (EntityRepository $er) {
-                    return $er->findAccountByCode(100);
+                    return $er->findAccountByStatus(0);
                 },
                 'choice_label' => 'name',
+                'placeholder' => 'Choose an Account',
             ])
 
+
+
+            ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+                 $product = $event->getData();
+                 $form = $event->getForm();
+        
+            //    dd($product  ) ;
+
+            if (!$product || null === $product->getId()) {
+                $form->add('accountType', EntityType::class, [
+                    'class' => AccountBalance::class,
+                    'query_builder' => function (EntityRepository $er) {
+                        return $er->findAccountByStatus(1);
+                    },
+                    'choice_label' => 'name',
+                    'placeholder' => 'Choose an AccountType',
+                    'mapped' => false
+                ]);
+            }
+            })
             ->add('save', SubmitType::class);
     }
 

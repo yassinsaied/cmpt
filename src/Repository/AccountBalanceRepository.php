@@ -42,10 +42,10 @@ class AccountBalanceRepository extends ServiceEntityRepository
     /**
      * @return AccountBalance[] Returns an array of AccountBalance objects
      */
-    public function findAccountByCode($value)
+    public function findAccountByStatus($value)
     {
         return $this->createQueryBuilder('a')
-            ->andWhere('a.code = :val')
+            ->andWhere('a.status = :val')
             ->setParameter('val', $value)
             ->orderBy('a.name', 'DESC');
         // ->setMaxResults(10)
