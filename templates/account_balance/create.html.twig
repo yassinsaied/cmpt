@@ -1,7 +1,43 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello AccountBalanceController!{% endblock %}
+{% block title %}Hello AccountBalanceController!
+{% endblock %}
+{% block javascripts %}
+	<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+	<script>
 
+
+		// When sport gets selected ...
+$( document ).on( 'change', '#account_balance_account', function () {
+var form = $( this ).closest( 'form' );
+// Simulate form data, but only include the selected sport value.
+var data = {};
+data[ $( this ).attr( 'name' ) ] = $( this ).val();
+// Submit data via AJAX to the form's action path.
+console.log( data );
+$.ajax( {
+url: form.attr( 'action' ),
+type: form.attr( 'method' ),
+data: data,
+complete: function ( html ) { // Replace current position field ...
+console.log( html.responseText );
+$( '#account_balance_account' ).replaceWith(
+// ... with the returned one from the AJAX response.
+$( html.responseText ).find( '#account_balance_account' )
+);
+// Position field now displays the appropriate positions.
+}
+} );
+} );
+	</script>
+
+
+{% endblock %}
 {% block body %}
- {{ form(formCreateAccount) }}
+
+	{{ form_start(formCreateAccount) }}
+
+	{{ form_end(formCreateAccount) }}
+
+
 {% endblock %}

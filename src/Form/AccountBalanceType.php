@@ -15,7 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class AccountBalanceType extends AbstractType
-{   
+{
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -29,7 +29,7 @@ class AccountBalanceType extends AbstractType
                 'label' => 'Code',
             ])
 
-           ->add('account', EntityType::class, [
+            ->add('accountt', EntityType::class, [
                 'class' => AccountBalance::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->findAccountByStatus(0);
@@ -41,32 +41,27 @@ class AccountBalanceType extends AbstractType
 
             ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
 
-                 $data = $event->getData();
-                 $form = $event->getForm();
+                $data = $event->getData();
+                $form = $event->getForm();
+                $account = $form->get("account")->getData();
 
-                 $account = $form->get("account")->getData();
-                 $accountType = null === $account ? [] : $account->getAccountType();
+                $accountType = null === $account ? [] : $account->getAccountType();
 
-              
-                    
-               // Add the Neighborhoods field with the properly data
-                    $form->add('accountType', EntityType::class, [
-                        'class' => AccountBalance::class,
-                        'choices' => $accountType,
-                        'choice_label' => 'name',
-                        'placeholder' => 'Choose an AccountType',
-                        'mapped' => false
-                    ]);
-                
-
-    
-          
+                dd($accountType);
+                // Add the Neighborhoods field with the properly data
+                $form->add('accountType', EntityType::class, [
+                    'class' => AccountBalance::class,
+                    'choices' => $accountType,
+                    'choice_label' => 'name',
+                    'placeholder' => 'Choose an AccountType',
+                    'mapped' => false
+                ]);
             })
             ->add('save', SubmitType::class);
     }
 
-    
-  
+
+
 
 
 
