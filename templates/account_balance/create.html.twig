@@ -8,7 +8,7 @@
 
 
 		// When sport gets selected ...
-$( document ).on( 'change', '#account_balance_account', function () {
+$( document ).on( 'change', '#account_balance_accountt', function () {
 var form = $( this ).closest( 'form' );
 // Simulate form data, but only include the selected sport value.
 var data = {};
@@ -21,9 +21,9 @@ type: form.attr( 'method' ),
 data: data,
 complete: function ( html ) { // Replace current position field ...
 console.log( html.responseText );
-$( '#account_balance_account' ).replaceWith(
+$( '#account_balance_subAccount' ).replaceWith(
 // ... with the returned one from the AJAX response.
-$( html.responseText ).find( '#account_balance_account' )
+$( html.responseText ).find( '#account_balance_subAccount' )
 );
 // Position field now displays the appropriate positions.
 }

@@ -39,30 +39,38 @@ class AccountBalanceType extends AbstractType
                 'mapped' => false
             ])
 
-            ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
 
-                $data = $event->getData();
-                $form = $event->getForm();
-                $account = $form->get("account")->getData();
-
-                $accountType = null === $account ? [] : $account->getAccountType();
-
-                dd($accountType);
-                // Add the Neighborhoods field with the properly data
-                $form->add('accountType', EntityType::class, [
-                    'class' => AccountBalance::class,
-                    'choices' => $accountType,
-                    'choice_label' => 'name',
-                    'placeholder' => 'Choose an AccountType',
-                    'mapped' => false
-                ]);
-            })
             ->add('save', SubmitType::class);
+
+        $formModifier = function (FormInterface $form, AccountBalance $account = null) {
+            $subAccount = $account === null ? [] : $account->getAccountType();
+
+            $form->add('subAccount', EntityType::class, [
+                'class' => AccountBalance::class,
+                'choice_label' => 'name',
+                'choices' => $subAccount,
+                'placeholder' => 'Choose an type Account',
+                "mapped" => false
+            ]);
+        };
+
+
+        $builder->addEventListener(
+            FormEvents::PRE_SET_DATA,
+            function (FormEvent $event) use ($formModifier) {
+                $gAccount = $event->getForm()->get('accountt')->getData();
+                $formModifier($event->getForm(), $gAccount);
+            }
+        );
+
+        $builder->get('accountt')->addEventListener(
+            FormEvents::POST_SUBMIT,
+            function (FormEvent $event) use ($formModifier) {
+                $globalAccount = $event->getForm()->getData();
+                $formModifier($event->getForm()->getParent(), $globalAccount);
+            }
+        );
     }
-
-
-
-
 
 
     public function configureOptions(OptionsResolver $resolver): void
