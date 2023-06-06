@@ -18,6 +18,9 @@ class AccountBalanceType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $parentAccount = $options['data'];
+        // dd($parentAccount);
+
         $builder
             ->add('name', TextType::class, [
                 'required' => true,
@@ -36,21 +39,28 @@ class AccountBalanceType extends AbstractType
                 },
                 'choice_label' => 'name',
                 'placeholder' => 'Choose an Account',
-                'mapped' => false
+                'mapped' => false,
+                'data' =>    $parentAccount  instanceof AccountBalance ?? ($parentAccount->getAccount()),
             ])
 
 
             ->add('save', SubmitType::class);
 
-        $formModifier = function (FormInterface $form, AccountBalance $account = null) {
+        $formModifier = function (FormInterface $form, AccountBalance $account = null,  $currentEntity = null) {
+
+
             $subAccount = $account === null ? [] : $account->getAccountType();
+
+            // dump($currentEntity->getAccount()->getName());
+
 
             $form->add('subAccount', EntityType::class, [
                 'class' => AccountBalance::class,
                 'choice_label' => 'name',
                 'choices' => $subAccount,
                 'placeholder' => 'Choose an type Account',
-                "mapped" => false
+                "mapped" => false,
+                // 'data' =>  $account->getAccount()->getName()
             ]);
         };
 
@@ -58,6 +68,7 @@ class AccountBalanceType extends AbstractType
         $builder->addEventListener(
             FormEvents::PRE_SET_DATA,
             function (FormEvent $event) use ($formModifier) {
+
                 $gAccount = $event->getForm()->get('accountt')->getData();
                 $formModifier($event->getForm(), $gAccount);
             }

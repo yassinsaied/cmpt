@@ -13,9 +13,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class AccountBalanceController extends AbstractController
 {
     #[Route('/account/create', name: 'cmpt_create_account')]
-    public function createAccount(Request $request , EntityManagerInterface $entityManager): Response
+    public function createAccount(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $accountBalance = new AccountBalance() ;
+        $accountBalance = new AccountBalance();
 
         $form = $this->createForm(AccountBalanceType::class, $accountBalance);
         $form->handleRequest($request);
@@ -24,14 +24,35 @@ class AccountBalanceController extends AbstractController
 
             $accountBalance->setStatus(3);
             $accountBalance->setAccount($form->get('subAccount')->getData());
-            $entityManager->persist( $accountBalance) ;
-            $entityManager->flush() ;
+            $entityManager->persist($accountBalance);
+            $entityManager->flush();
         }
 
         return $this->render('account_balance/create.html.twig', [
-             "formCreateAccount" =>  $form->createView() 
+            "formCreateAccount" =>  $form->createView()
         ]);
     }
 
 
+    #[Route('/account/{id}/edit', name: 'cmpt_edit_account')]
+    public function updateAccount(Request $request, EntityManagerInterface $entityManager,  AccountBalance  $accountBalance): Response
+    {
+
+
+        $parentAccount = $accountBalance->getAccount();
+
+
+        $form = $this->createForm(AccountBalanceType::class, $accountBalance, ['data' => $parentAccount]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $accountBalance->setStatus(3);
+            $accountBalance->setAccount($form->get('subAccount')->getData());
+            $entityManager->flush();
+        }
+
+        return $this->render('account_balance/create.html.twig', [
+            "formCreateAccount" =>  $form->createView()
+        ]);
+    }
 }
