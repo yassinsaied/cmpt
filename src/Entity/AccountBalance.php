@@ -18,7 +18,7 @@ class AccountBalance
 
     # Many accountType have One account.
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'accountType')]
-    #[ORM\JoinColumn(name: 'parent_id',  referencedColumnName: 'id', nullable: true)]
+    #[ORM\JoinColumn(name: 'parent_id',  referencedColumnName: 'id', nullable: true, onDelete: 'CASCADE')]
     private self $account;
 
 

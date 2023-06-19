@@ -35,18 +35,14 @@ class AccountBalanceController extends AbstractController
 
 
     #[Route('/account/{id}/edit', name: 'cmpt_edit_account')]
-    public function updateAccount(Request $request, EntityManagerInterface $entityManager,  AccountBalance  $accountBalance): Response
+    public function updateAccount(Request $request, EntityManagerInterface $entityManager, AccountBalance $accountBalance): Response
     {
-
-
         $parentAccount = $accountBalance->getAccount();
-
-
         $form = $this->createForm(AccountBalanceType::class, $accountBalance, ['data' => $parentAccount]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $accountBalance->setStatus(3);
+
             $accountBalance->setAccount($form->get('subAccount')->getData());
             $entityManager->flush();
         }

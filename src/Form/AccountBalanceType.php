@@ -6,6 +6,7 @@ use App\Entity\AccountBalance;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -16,10 +17,21 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class AccountBalanceType extends AbstractType
 {
+
+    private $entityManager;
+
+    public function __construct(EntityManagerInterface $er)
+    {
+
+        $this->entityManager = $er;
+    }
+
+
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $parentAccount = $options['data'];
-        // dd($parentAccount);
+        // dd($options['data']->getAccount()->getId());
 
         $builder
             ->add('name', TextType::class, [
@@ -40,16 +52,26 @@ class AccountBalanceType extends AbstractType
                 'choice_label' => 'name',
                 'placeholder' => 'Choose an Account',
                 'mapped' => false,
-                'data' =>    $parentAccount  instanceof AccountBalance ?? ($parentAccount->getAccount()),
+                'choice_attr' => function ($choice, $key, $value) use ($parentAccount) {
+                    $selected = false;
+                    if ($parentAccount->getId() !== null && $parentAccount->getAccount()->getId() === $choice->getId()) {
+                        $selected = true;
+                    }
+                    return ['selected' =>  $selected];
+                },
+
             ])
 
 
             ->add('save', SubmitType::class);
 
-        $formModifier = function (FormInterface $form, AccountBalance $account = null,  $currentEntity = null) {
+        $formModifier = function (FormInterface $form, AccountBalance $account = null) use ($parentAccount) {
+            // dd($this->entityManager->getRepository(AccountBalance::class)->findAccountByStatus(1)->getQuery()
+            //     ->getResult());
 
+            $subAccount = $account === null ? $this->entityManager->getRepository(AccountBalance::class)->findAccountByStatus(1)->getQuery()
+                ->getResult() : $account->getAccountType();
 
-            $subAccount = $account === null ? [] : $account->getAccountType();
 
             // dump($currentEntity->getAccount()->getName());
 
@@ -60,7 +82,14 @@ class AccountBalanceType extends AbstractType
                 'choices' => $subAccount,
                 'placeholder' => 'Choose an type Account',
                 "mapped" => false,
-                // 'data' =>  $account->getAccount()->getName()
+                'choice_attr' => function ($choice, $key, $value) use ($parentAccount) {
+                    $selected = false;
+                    if ($parentAccount->getId() !== null && $parentAccount->getId() === $choice->getId()) {
+                        $selected = true;
+                    }
+                    return ['selected' =>  $selected];
+                },
+
             ]);
         };
 

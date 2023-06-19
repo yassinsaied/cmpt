@@ -2,6 +2,8 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Book;
+use DateTimeImmutable;
 use App\Factory\UserFactory;
 use App\Entity\AccountBalance;
 use Doctrine\Persistence\ObjectManager;
@@ -35,6 +37,7 @@ class AppFixtures extends Fixture
 
     function load(ObjectManager $manager): void
     {
+        $today = new DateTimeImmutable('now');
 
         foreach (self::ACCOUNT as $key => $value) {
             $accountBalance = new AccountBalance();
@@ -52,6 +55,23 @@ class AppFixtures extends Fixture
                 $manager->persist($subAccountBalance);
             }
         }
+
+        for ($i = 0; $i < 20; $i++) {
+            $book = new Book;
+            $book->setTitle('book ' . $i);
+            $book->setDescription('Quatrième de couverture numéro : ' . $i);
+            $book->setCreatedAt($today->modify('-' . $i . ' days'));
+            $manager->persist($book);
+        }
+
+
+
+
+
+
+
+
+
 
         $manager->flush();
     }
