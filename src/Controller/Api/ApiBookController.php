@@ -22,11 +22,11 @@ class ApiBookController extends AbstractController
         return  new JsonResponse($jsonBookList, Response::HTTP_OK, [], true);
     }
 
-    #[Route('/api/books/{id}', name: 'cmpt_api_getbooks', methods: ['GET'])]
+    #[Route('/api/books/{id}', name: 'cmpt_api_getbook', methods: ['GET'])]
     public function getDetailsBokk(Book $book, SerializerInterface $serializer): JsonResponse
     {
-
         $jsonBookDetails = $serializer->serialize($book, 'json');
+
         return new JsonResponse($jsonBookDetails, Response::HTTP_OK, [], true);
     }
 }

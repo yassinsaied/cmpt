@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Book;
+use App\Entity\Author;
 use DateTimeImmutable;
 use App\Factory\UserFactory;
 use App\Entity\AccountBalance;
@@ -38,6 +39,7 @@ class AppFixtures extends Fixture
     function load(ObjectManager $manager): void
     {
         $today = new DateTimeImmutable('now');
+        $listAuthor = [];
 
         foreach (self::ACCOUNT as $key => $value) {
             $accountBalance = new AccountBalance();
@@ -56,21 +58,25 @@ class AppFixtures extends Fixture
             }
         }
 
+
+        for ($i = 0; $i < 10; $i++) {
+            // Création de l'auteur lui-même.
+            $author = new Author();
+            $author->setFirstName("Prénom " . $i);
+            $author->setLastName("Nom " . $i);
+            $manager->persist($author);
+            $listAuthor[] = $author;
+        }
+
+
         for ($i = 0; $i < 20; $i++) {
             $book = new Book;
             $book->setTitle('book ' . $i);
             $book->setDescription('Quatrième de couverture numéro : ' . $i);
             $book->setCreatedAt($today->modify('-' . $i . ' days'));
+            $book->setAuthor($listAuthor[array_rand($listAuthor)]);
             $manager->persist($book);
         }
-
-
-
-
-
-
-
-
 
 
         $manager->flush();
