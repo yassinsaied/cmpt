@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\BookRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 
 #[ORM\Entity(repositoryClass: BookRepository::class)]
 class Book
@@ -11,19 +13,24 @@ class Book
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(["getBooks"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["getBooks"])]
     private ?string $title = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(["getBooks"])]
     private ?string $description = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(["getBooks"])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'books')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    #[Groups(["getBooks"])]
     private ?Author $author = null;
 
     public function getId(): ?int
