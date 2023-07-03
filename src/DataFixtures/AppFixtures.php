@@ -3,16 +3,25 @@
 namespace App\DataFixtures;
 
 use App\Entity\Book;
+use App\Entity\User;
 use App\Entity\Author;
 use DateTimeImmutable;
 use App\Factory\UserFactory;
 use App\Entity\AccountBalance;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 
 class AppFixtures extends Fixture
 {
+    private $userPasswordHasher;
+
+    public function __construct(UserPasswordHasherInterface $userPasswordHasher)
+    {
+        $this->userPasswordHasher = $userPasswordHasher;
+    }
+
 
     const ACCOUNT = [
         "Actifs" => [
@@ -40,6 +49,23 @@ class AppFixtures extends Fixture
     {
         $today = new DateTimeImmutable('now');
         $listAuthor = [];
+
+        // Création d'un user "normal"
+        $user = new User();
+        $user->setEmail("user@bookapi.com");
+        $user->setRoles(["ROLE_USER"]);
+        $user->setPassword($this->userPasswordHasher->hashPassword($user, "password"));
+        $manager->persist($user);
+
+        // Création d'un user admin
+        $userAdmin = new User();
+        $userAdmin->setEmail("admin@bookapi.com");
+        $userAdmin->setRoles(["ROLE_ADMIN"]);
+        $userAdmin->setPassword($this->userPasswordHasher->hashPassword($userAdmin, "password"));
+        $manager->persist($userAdmin);
+
+
+
 
         foreach (self::ACCOUNT as $key => $value) {
             $accountBalance = new AccountBalance();
